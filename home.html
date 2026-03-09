@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- link fav logo and  title name  -->
+    <link
+      rel="shortcut icon"
+      href="./assets/github-logo.png"
+      type="image/x-icon"
+    />
+    <title>GitHub Issues Tracker</title>
+    <!-- link fontawosme for icon  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- link font  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- link tailwin and daisyUI link  -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- link css  -->
+    <link rel="stylesheet" href="./style/style.css" />
+  </head>
+  <body>
+    <!-- nav section  -->
+    <nav>
+      <div
+        class="navbar bg-base-100 shadow-sm flex-row justify-between gap-2 p-4"
+      >
+        <div class="flex-1">
+          <div class="flex gap-[10px] items-center">
+            <div class="w-[36px] h-[37px]">
+              <img src="./assets/github-logo.png" alt="" />
+            </div>
+            <p class="hidden sm:block">GitHub Issues Tracker</p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <label class="input flex input-bordered items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass opacity-60"></i>
+            <input
+              id="input-search"
+              type="text"
+              class="grow"
+              placeholder="Search issues..."
+            />
+          </label>
+          <button id="btn-search" class="btn btn-primary">
+            <i class="fa-solid fa-magnifying-glass md:hidden"></i>
+            <span class="hidden md:inline">search</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <!-- button section  -->
+    <section
+      class="w-full sm:w-9/12 lg:w-10/12 mx-auto bg-[#fffdfd] mt-0 md:mt-[55px] shadow-sm rounded-xl p-8"
+    >
+      <div class="flex gap-[8px]">
+        <button
+          onclick="
+            buttonStyle('All');
+            filterIssues('all');
+          "
+          id="allbutton"
+          class="stausBtn btn md:w-[120px] btn-primary"
+        >
+          All
+        </button>
+        <button
+          onclick="
+            buttonStyle('Open');
+            filterIssues('open');
+          "
+          id="openbutton"
+          class="stausBtn btn md:w-[120px]"
+        >
+          Open
+        </button>
+        <button
+          onclick="
+            buttonStyle('Closed');
+            filterIssues('closed');
+          "
+          id="closedbutton"
+          class="stausBtn btn md:w-[120px]"
+        >
+          Closed
+        </button>
+      </div>
+    </section>
+
+    <!-- totoal issues section  -->
+    <section
+      class="w-11/12 sm:w-9/12 lg:w-10/12 mx-auto bg-[#ffffff] shadow-sm rounded-xl p-[32px] mt-[16px]"
+    >
+      <div class="flex justify-between">
+        <div class="div1 flex items-center gap-[10px]">
+          <div><img src="./assets/Aperture.png" alt="" /></div>
+          <div>
+            <h1 class="text-[20px] font-semibold">
+              <span id="issue-counter">0</span> Issues
+            </h1>
+            <p class="hidden sm:block md:text-[16px] text-[#64748B]">
+              Track and manage your project issues
+            </p>
+          </div>
+        </div>
+        <div class="div2 flex gap-[16px]">
+          <div class="flex items-center gap-[8px]">
+            <div class="h-[12px] w-[12px] bg-[#00A96E] rounded-full"></div>
+            <p>Open</p>
+          </div>
+          <div class="flex items-center gap-[8px]">
+            <div class="h-[12px] w-[12px] bg-[#A855F7] rounded-full"></div>
+            <p>Closed</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="spinner" class="flex justify-center items-center py-25 hidden">
+      <span class="loading loading-infinity loading-xl"></span>
+    </section>
+
+    <!-- problem card show  section  -->
+    <section
+      id="word-paren-container"
+      class="w-11/12 sm:w-9/12 lg:w-10/12 mx-auto bg-[#ffffff] shadow-sm rounded-xl p-[32px] mt-[2px]"
+    >
+      <section
+        id="card-container"
+        class="md:grid grid-cols-2 lg:grid-cols-4 gap-[13px] space-y-4"
+      ></section>
+    </section>
+    <!-- modal section -->
+    <section>
+      <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
+        <div
+          class="bg-[#fffcfc] rounded-2xl md:rounded-3xl shadow-xl p-6 md:p-10 w-full max-w-4xl my-auto"
+        >
+          <div id="ditals-container"></div>
+          <div class="modal-action">
+            <form method="dialog">
+              <button class="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+    </section>
+
+  <script src="./script/index.js"></script>
+    <script src="./script/button-style.js"></script>
+    <script src="./script/home.js"></script>
+  </body>
+</html>
